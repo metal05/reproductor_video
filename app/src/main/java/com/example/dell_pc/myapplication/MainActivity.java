@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     VideoView miVideo;VideoView miVideo2;
     int oldCurrentPosition=-1;
     int oldCurrentPosition2=-1;
-
+/*XD*/
     @Override
     protected void onResume() {
         super.onResume();
