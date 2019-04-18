@@ -1,5 +1,6 @@
 package com.example.dell_pc.myapplication;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -63,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        final Intent intent = new Intent(this, DrawerActivity.class);
+        /*launchActivity(intent);*/
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         miVideo = (VideoView) findViewById(R.id.videoView);
@@ -163,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 textoSave.setText("Guardado");
                 Toast.makeText(MainActivity.this ,"Guardo el video",Toast.LENGTH_LONG  ).show();
+                startActivity(intent);
+                intent.putExtra("VideoID","123XD");
             }
         });
         play2.setOnClickListener(new View.OnClickListener(){
