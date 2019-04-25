@@ -1,7 +1,12 @@
 package com.example.dell_pc.myapplication;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +18,9 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 public class MainActivity extends AppCompatActivity {
+
+
+
     VideoView miVideo;VideoView miVideo2;
     int oldCurrentPosition=-1;
     int oldCurrentPosition2=-1;
@@ -171,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this ,"Guardo el video",Toast.LENGTH_LONG  ).show();
                 startActivity(intent);
                 intent.putExtra("VideoID","123XD");
+
             }
         });
         play2.setOnClickListener(new View.OnClickListener(){
@@ -189,5 +198,40 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println("onCreate()");
         Log.d("MainAct","onCreate");
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            }
+        }
+
+        String [] misPermisos = new String[]{
+                Manifest.permission.CAMERA
+        };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(misPermisos,76575);
+        }
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                }
+                return;
+            }
+        }
+    }
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1 ;
 }
