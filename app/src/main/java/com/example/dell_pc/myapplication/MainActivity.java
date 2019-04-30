@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,9 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -179,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this ,"Guardo el video",Toast.LENGTH_LONG  ).show();
                 startActivity(intent);
                 intent.putExtra("VideoID","123XD");
-
             }
         });
         play2.setOnClickListener(new View.OnClickListener(){
@@ -199,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("onCreate()");
         Log.d("MainAct","onCreate");
 
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        /*int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -207,21 +210,31 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
             }
         }
 
         String [] misPermisos = new String[]{
-                Manifest.permission.CAMERA
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE
         };
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(misPermisos,76575);
+        }*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(
+                    new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },43
+            );
         }
+        crearCarpeta();
+        crearArchivo();
     }
-
-
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
@@ -233,5 +246,49 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1 ;
-}
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1 ;*/
+
+
+
+        private static String TAG = MainActivity.class.getSimpleName();
+
+    private String nombreCarpeta = "univalleA";
+
+    void crearCarpeta() {
+
+        File fileDocuments =
+                Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOCUMENTS
+                );
+        File myFile = new File(
+                fileDocuments.getAbsolutePath(),
+                nombreCarpeta
+        );
+
+        myFile.mkdir();
+
+        //new File()
+        Log.d(TAG, "-->" + fileDocuments.getAbsolutePath());
+    }
+
+    void crearArchivo() {
+        File fileDocuments = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        File miCarpeta = new File(fileDocuments.getAbsolutePath(), nombreCarpeta);
+        File miArchivo = new File(miCarpeta.getAbsolutePath(), "texto creado.txt");
+
+        String texto = "Este es el texto de la creado de la APK";
+
+        try {
+            FileOutputStream ous = new FileOutputStream(miArchivo);
+            ous.write(texto.getBytes());
+            ous.close();
+            Toast.makeText(this, "Archivo creado", Toast.LENGTH_SHORT)
+                    .show();
+        }catch (Exception e){
+            Toast.makeText(this, "Archivo no creado", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+    }
+
+    }
